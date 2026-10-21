@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+/* Colors sampled from the Tasklane PDF design. */
+@theme {
+  --color-paper: #f4f3ee;
+  --color-sheet: #faf9f5;
+  --color-ink: #1b1b18;
+  --color-muted: #6b6a63;
+  --color-line: #dedbd4;
+  --color-edge: #c4c0b4;
+  --color-tint: #eae8e0;
+  --color-accent: #b9391e;
+  --color-bar: #d94728;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@layer base {
+  body { @apply bg-paper font-sans text-sm text-ink antialiased; }
+  :focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+}
+
+@layer components {
+  .field { @apply min-h-11 w-full rounded border border-edge bg-sheet px-3 text-sm placeholder:text-muted; }
+  .field[aria-invalid='true'] { @apply border-accent; }
+  .btn { @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded bg-accent px-4 text-sm font-medium text-white hover:brightness-90; }
+  .btn-line { @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded border border-ink bg-transparent px-4 text-sm hover:bg-tint; }
+  .link { @apply cursor-pointer underline underline-offset-4; }
+  .label { @apply mb-1.5 block text-muted; }
+  .mono { @apply font-mono text-xs; }
+}
