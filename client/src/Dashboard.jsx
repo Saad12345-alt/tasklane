@@ -3,6 +3,7 @@ import { api } from './api';
 import Sidebar, { TeamsDrawer } from './Sidebar';
 import NewTeamModal from './NewTeamModal';
 import MembersModal from './MembersModal';
+import TaskList from './TaskList';
 import { Chevron } from './icons';
 
 export default function Dashboard({ user, onSignOut }) {
@@ -64,7 +65,7 @@ export default function Dashboard({ user, onSignOut }) {
             </div>
           </div>
         )}
-        {team && <p className="p-6 text-muted">Tasks will show up here.</p>}
+        {team && <TaskList key={team.id} team={team} members={members} user={user} />}
       </main>
       {drawer && <TeamsDrawer {...nav} onClose={() => setDrawer(false)} />}
       {modal === 'new-team' && <NewTeamModal onClose={() => setModal(null)} onCreated={created} />}
