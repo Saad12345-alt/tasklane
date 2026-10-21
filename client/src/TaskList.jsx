@@ -27,7 +27,7 @@ function Skeleton() {
 }
 
 // `version` changes whenever a task is saved elsewhere, which triggers a reload.
-export default function TaskList({ team, members, user, onOpen, version = 0 }) {
+export default function TaskList({ team, members, user, onOpen, activeId, version = 0 }) {
   const [tasks, setTasks] = useState(null); // null until the first response
   const [failed, setFailed] = useState(false);
   const [search, setSearch] = useState('');
@@ -102,7 +102,7 @@ export default function TaskList({ team, members, user, onOpen, version = 0 }) {
               {g.value === 'done' && <button onClick={() => setShowDone(!showDone)} className="link ml-auto md:hidden">{showDone ? 'Hide' : 'Show'}</button>}
             </h2>
             <ul>
-              {rows.map((t) => <TaskRow key={t.id} task={t} onOpen={onOpen} hideOnPhone={collapsed} />)}
+              {rows.map((t) => <TaskRow key={t.id} task={t} onOpen={onOpen} hideOnPhone={collapsed} selected={t.id === activeId} />)}
               {g.value === 'done' && g.items.length > DONE_PREVIEW && (
                 <li className={`flex items-center justify-between border-b border-line py-2 text-[13px] text-muted max-md:hidden ${pad}`}>
                   <span>{hidden > 0 ? `${hidden} more done` : `All ${g.items.length} done tasks shown`}</span>

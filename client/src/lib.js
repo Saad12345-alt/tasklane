@@ -9,6 +9,12 @@ export const dayDiff = (a, b) => Math.round((new Date(`${a}T00:00`) - new Date(`
 // Whole days overdue, or 0 when the task is done, undated or not yet due.
 export const daysLate = (task) => (task.status !== 'done' && task.due_date ? Math.max(0, dayDiff(today(), task.due_date)) : 0);
 
+// "Priya Nair" -> "Priya N."
+export const shortName = (name) => {
+  const [first, ...rest] = name.trim().split(/\s+/);
+  return rest.length ? `${first} ${rest.at(-1)[0]}.` : first;
+};
+
 export const STATUSES = [
   { value: 'doing', label: 'Doing' },
   { value: 'todo', label: 'Todo' },

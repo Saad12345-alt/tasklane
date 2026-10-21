@@ -3,7 +3,7 @@ import { StatusIcon } from './icons';
 import { code, daysLate, fmtDate } from './lib';
 
 // One task: a single line on desktop, two lines on phones. Becomes a button when `onOpen` is given.
-export default function TaskRow({ task: t, onOpen, hideOnPhone }) {
+export default function TaskRow({ task: t, onOpen, hideOnPhone, selected }) {
   const late = daysLate(t);
   const done = t.status === 'done';
   const id = <span className="mono w-14 shrink-0 text-muted">{code(t.id)}</span>;
@@ -17,7 +17,7 @@ export default function TaskRow({ task: t, onOpen, hideOnPhone }) {
 
   return (
     <li className={hideOnPhone ? 'max-md:hidden' : ''}>
-      <button disabled={!onOpen} onClick={() => onOpen(t)} className="block w-full cursor-pointer border-b border-line px-5 py-2 text-left hover:bg-tint/60 disabled:cursor-default disabled:hover:bg-transparent md:px-6">
+      <button disabled={!onOpen} onClick={() => onOpen(t)} aria-current={selected} className={`block w-full cursor-pointer border-b border-line px-5 py-2 text-left hover:bg-tint/60 disabled:cursor-default disabled:hover:bg-transparent md:px-6 ${selected ? 'bg-tint/60 shadow-[inset_3px_0_0_var(--color-ink)]' : ''}`}>
         <span className="hidden items-center gap-3 md:flex">
           {id}
           <StatusIcon status={t.status} />
