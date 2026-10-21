@@ -11,8 +11,9 @@ const owner = (req, res, next) =>
 r.get('/', async (req, res) =>
   res.json(
     await q(
-      `select t.id, t.name, t.owner_id, m.role from teams t
-       join team_members m on m.team_id = t.id where m.user_id = $1 order by t.id`,
+      `select t.id, t.name, t.owner_id, m.role,
+              (select count(*)::int from tasks k where k.team_id = t.id and k.status <> 'done') as open_count
+       from teams t join team_members m on m.team_id = t.id where m.user_id = $1 order by t.id`,
       [req.user.id],
     ),
   ),
@@ -25,7 +26,7 @@ r.post('/', validate(nameBody), async (req, res) => {
      select * from t`,
     [req.body.name, req.user.id],
   );
-  res.status(201).json({ ...team, role: 'owner' });
+  res.status(201).json({ ...team, role: 'owner', open_count: 0 });
 });
 
 // Everything below needs the caller to be on the team (otherwise it looks like the team doesn't exist).
@@ -69,6 +70,7 @@ r.delete('/:id(\\d+)/members/:userId(\\d+)', owner, async (req, res) => {
   if (!member) return res.status(404).json({ error: 'That person isn’t on this team' });
   if (member.role === 'owner') return res.status(400).json({ error: 'The owner can’t be removed. Delete the team instead.' });
   await q('delete from team_members where team_id = $1 and user_id = $2', [req.params.id, req.params.userId]);
+  await q('update tasks set assignee_id = null where team_id = $1 and assignee_id = $2', [req.params.id, req.params.userId]); // their tasks become unassigned
   res.status(204).end();
 });
 
