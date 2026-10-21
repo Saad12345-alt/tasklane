@@ -43,6 +43,22 @@ r.get('/', validate(filters, 'query'), async (req, res) => {
   );
 });
 
+// Once per login (the flag is set in auth.js): my open tasks that are overdue or due within 3 days.
+// The client sends its own local date so "today" matches the user's clock, not the server's.
+r.get('/reminders', validate(Joi.object({ today: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/) }), 'query'), async (req, res) => {
+  if (!req.session.showReminders) return res.json([]);
+  req.session.showReminders = false;
+  res.json(
+    await q(
+      `select t.id, t.title, t.team_id, t.due_date from tasks t
+       where t.assignee_id = $1 and t.status <> 'done' and t.due_date <= coalesce($2::date, current_date) + 3
+         and t.team_id in (select team_id from team_members where user_id = $1)
+       order by t.due_date, t.id`,
+      [req.user.id, req.query.today ?? null],
+    ),
+  );
+});
+
 r.post('/', validate(body), async (req, res) => {
   const b = req.body;
   const bad = await problem(req.user.id, b.teamId, b.assigneeId);

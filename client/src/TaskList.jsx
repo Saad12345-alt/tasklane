@@ -27,7 +27,7 @@ function Skeleton() {
 }
 
 // `version` changes whenever a task is saved elsewhere, which triggers a reload.
-export default function TaskList({ team, members, user, onOpen, activeId, version = 0 }) {
+export default function TaskList({ team, members, user, onOpen, activeId, version = 0, mineSignal = 0 }) {
   const [tasks, setTasks] = useState(null); // null until the first response
   const [failed, setFailed] = useState(false);
   const [search, setSearch] = useState('');
@@ -51,6 +51,7 @@ export default function TaskList({ team, members, user, onOpen, activeId, versio
   }, [team.id, search, assignee, version, attempt]);
 
   const shown = failed ? null : tasks; // after a failed load, show only the error bar
+  useEffect(() => { if (mineSignal) setAssignee(String(user.id)); }, [mineSignal, user.id]); // the reminder's "Show my tasks"
   const clear = () => { setSearch(''); setAssignee(''); };
   const groups = STATUSES.map((s) => ({ ...s, items: (tasks ?? []).filter((t) => t.status === s.value).sort(byDue(s.value === 'done' ? -1 : 1)) }));
 

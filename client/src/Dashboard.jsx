@@ -5,6 +5,7 @@ import NewTeamModal from './NewTeamModal';
 import MembersModal from './MembersModal';
 import TaskList from './TaskList';
 import TaskDrawer from './TaskDrawer';
+import Reminders from './Reminders';
 import { Chevron, Plus } from './icons';
 
 export default function Dashboard({ user, onSignOut }) {
@@ -15,6 +16,7 @@ export default function Dashboard({ user, onSignOut }) {
   const [members, setMembers] = useState([]);
   const [openTask, setOpenTask] = useState(null); // null = closed, {} = new task, task object = editing
   const [version, setVersion] = useState(0); // bumped after any change so the task list reloads
+  const [mineSignal, setMineSignal] = useState(0); // bumped by the reminder's "Show my tasks"
   const team = teams?.find((t) => t.id === teamId);
 
   useEffect(() => {
@@ -79,7 +81,8 @@ export default function Dashboard({ user, onSignOut }) {
             </div>
           </div>
         )}
-        {team && <TaskList key={team.id} team={team} members={members} user={user} onOpen={setOpenTask} activeId={openTask?.id} version={version} />}
+        {team && <Reminders onShowMine={() => setMineSignal((n) => n + 1)} />}
+        {team && <TaskList key={team.id} team={team} members={members} user={user} onOpen={setOpenTask} activeId={openTask?.id} version={version} mineSignal={mineSignal} />}
       </main>
       {team && openTask && (
         <TaskDrawer key={openTask.id ?? 'new'} task={openTask} team={team} members={members} user={user} onClose={() => setOpenTask(null)} onSaved={taskDone} onDeleted={taskDone} />
