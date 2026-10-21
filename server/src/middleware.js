@@ -1,3 +1,5 @@
+import { q } from './db.js';
+
 export const requireAuth = (req, res, next) =>
   req.isAuthenticated() ? next() : res.status(401).json({ error: 'Sign in required' });
 
@@ -12,3 +14,7 @@ export const validate = (schema, source = 'body') => (req, res, next) => {
   req[source] = value;
   next();
 };
+
+// The user's role on a team ('owner' | 'member'), or undefined if they are not on it.
+export const roleIn = async (teamId, userId) =>
+  (await q('select role from team_members where team_id = $1 and user_id = $2', [teamId, userId]))[0]?.role;
