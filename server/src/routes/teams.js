@@ -44,6 +44,34 @@ r.patch('/:id(\\d+)', owner, validate(nameBody), async (req, res) => {
   res.json({ ...team, role: req.role });
 });
 
+r.get('/:id(\\d+)/members', async (req, res) =>
+  res.json(
+    await q(
+      `select u.id, u.name, u.email, m.role from team_members m
+       join users u on u.id = m.user_id where m.team_id = $1 order by (m.role = 'owner') desc, u.id`,
+      [req.params.id],
+    ),
+  ),
+);
+
+r.post('/:id(\\d+)/members', owner, validate(Joi.object({ email: Joi.string().trim().lowercase().email().required() })), async (req, res) => {
+  const [user] = await q('select id, name, email from users where email = $1', [req.body.email]);
+  if (!user) return res.status(404).json({ error: `No account uses ${req.body.email} yet.` });
+  const added = await q(
+    "insert into team_members (team_id, user_id, role) values ($1, $2, 'member') on conflict do nothing returning user_id",
+    [req.params.id, user.id],
+  );
+  added.length ? res.status(201).json({ ...user, role: 'member' }) : res.status(409).json({ error: `${user.name} is already on this team.` });
+});
+
+r.delete('/:id(\\d+)/members/:userId(\\d+)', owner, async (req, res) => {
+  const [member] = await q('select role from team_members where team_id = $1 and user_id = $2', [req.params.id, req.params.userId]);
+  if (!member) return res.status(404).json({ error: 'That person isn’t on this team' });
+  if (member.role === 'owner') return res.status(400).json({ error: 'The owner can’t be removed. Delete the team instead.' });
+  await q('delete from team_members where team_id = $1 and user_id = $2', [req.params.id, req.params.userId]);
+  res.status(204).end();
+});
+
 r.delete('/:id(\\d+)', owner, async (req, res) => {
   await q('delete from teams where id = $1', [req.params.id]);
   res.status(204).end();

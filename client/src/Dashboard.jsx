@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from './api';
 import Sidebar, { TeamsDrawer } from './Sidebar';
 import NewTeamModal from './NewTeamModal';
+import MembersModal from './MembersModal';
 import { Chevron } from './icons';
 
 export default function Dashboard({ user, onSignOut }) {
@@ -9,6 +10,7 @@ export default function Dashboard({ user, onSignOut }) {
   const [teamId, setTeamId] = useState(null);
   const [modal, setModal] = useState(null); // 'new-team'
   const [drawer, setDrawer] = useState(false); // phone team list
+  const [members, setMembers] = useState([]);
   const team = teams?.find((t) => t.id === teamId);
 
   useEffect(() => {
@@ -18,6 +20,17 @@ export default function Dashboard({ user, onSignOut }) {
     });
   }, []);
 
+  useEffect(() => {
+    setMembers([]);
+    if (teamId) api(`/teams/${teamId}/members`).then(setMembers);
+  }, [teamId]);
+
+  const teamDeleted = () => {
+    const rest = teams.filter((t) => t.id !== teamId);
+    setTeams(rest);
+    setTeamId(rest[0]?.id ?? null);
+    setModal(null);
+  };
   const pick = (id) => {
     setTeamId(id);
     setDrawer(false);
@@ -36,10 +49,11 @@ export default function Dashboard({ user, onSignOut }) {
       <main className="min-w-0 flex-1">
         {team ? (
           <header className="flex h-[67px] items-center gap-4 border-b border-line px-5 md:px-6">
-            <button onClick={() => setDrawer(true)} className="flex cursor-pointer items-center gap-1.5 text-[17px] font-semibold md:hidden">
-              {team.name} <Chevron />
+            <button onClick={() => setDrawer(true)} className="flex min-w-0 cursor-pointer items-center gap-1.5 text-[17px] font-semibold md:hidden">
+              <span className="truncate">{team.name}</span> <Chevron />
             </button>
-            <h1 className="hidden text-xl font-semibold md:block">{team.name}</h1>
+            <h1 className="hidden truncate text-xl font-semibold md:block">{team.name}</h1>
+            <button onClick={() => setModal('members')} className="link shrink-0">Members {members.length}</button>
           </header>
         ) : (
           <div className="grid min-h-screen place-items-center px-6 text-center">
@@ -54,6 +68,7 @@ export default function Dashboard({ user, onSignOut }) {
       </main>
       {drawer && <TeamsDrawer {...nav} onClose={() => setDrawer(false)} />}
       {modal === 'new-team' && <NewTeamModal onClose={() => setModal(null)} onCreated={created} />}
+      {modal === 'members' && <MembersModal team={team} members={members} onChange={setMembers} onClose={() => setModal(null)} onDeleted={teamDeleted} />}
     </div>
   );
 }
