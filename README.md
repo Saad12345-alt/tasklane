@@ -23,10 +23,12 @@ You need Node 22+ and Docker (or any Postgres).
 ```bash
 npm run setup                      # install root, server and client dependencies
 cp server/.env.example server/.env # then set SESSION_SECRET to a long random string
-docker compose up -d db            # Postgres on :5432
+docker compose up -d db            # Postgres on :5433
 npm run dev                        # API on :8080, app on http://localhost:5173
 npm run seed --prefix server -- you@example.com   # optional demo team + 20 tasks for an existing account
 ```
+
+The local database uses host port `5433` to avoid conflicts with an existing PostgreSQL server on `5432`.
 
 Tables are created on startup from `server/db/*.sql`. Sessions are stored in Postgres; `SESSION_STORE=memory` in `server/.env` uses the in-memory store for development only.
 
