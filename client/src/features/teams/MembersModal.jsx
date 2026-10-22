@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { api } from './api';
-import Modal from './Modal';
-import Avatar from './Avatar';
+import { api } from '@/lib/api';
+import Modal from '@/components/Modal';
+import Avatar from '@/components/Avatar';
 
 export default function MembersModal({ team, members, onChange, onClose, onDeleted }) {
   const [email, setEmail] = useState('');

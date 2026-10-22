@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { X } from './icons';
+import { X } from '@/components/icons';
 
 // Class names for the two sections a modal form is made of.
 export const bodyClass = 'space-y-4 px-6 py-5';

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
-import Auth from './Auth';
-import Dashboard from './Dashboard';
+import { api } from '@/lib/api';
+import Auth from '@/features/auth/Auth';
+import Dashboard from '@/pages/Dashboard';
 
 export default function App() {
   const [user, setUser] = useState(undefined); // undefined = still checking the session
