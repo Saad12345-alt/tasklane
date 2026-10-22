@@ -1,4 +1,4 @@
-import { Plus, X } from './icons';
+import { Plus, X } from '@/components/icons';
 
 const row = 'relative flex w-full cursor-pointer items-center justify-between px-6 py-2 text-left hover:bg-tint/60';
 

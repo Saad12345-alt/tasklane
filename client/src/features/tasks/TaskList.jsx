@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
+import { api } from '@/lib/api';
 import TaskRow from './TaskRow';
-import Toggle from './Toggle';
-import { Plus, Search, StatusIcon } from './icons';
-import { STATUSES } from './lib';
+import Toggle from '@/components/Toggle';
+import { Plus, Search, StatusIcon } from '@/components/icons';
+import { STATUSES } from '@/lib/format';
 
 const DONE_PREVIEW = 3; // finished tasks shown before "Show all"
 const byDue = (dir) => (a, b) => dir * ((a.due_date ?? (dir > 0 ? '9999' : '')).localeCompare(b.due_date ?? (dir > 0 ? '9999' : '')) || a.id - b.id);

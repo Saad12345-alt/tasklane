@@ -1,6 +1,6 @@
-import Avatar from './Avatar';
-import { StatusIcon } from './icons';
-import { code, daysLate, fmtDate } from './lib';
+import Avatar from '@/components/Avatar';
+import { StatusIcon } from '@/components/icons';
+import { code, daysLate, fmtDate } from '@/lib/format';
 
 // One task: a single line on desktop, two lines on phones. Becomes a button when `onOpen` is given.
 export default function TaskRow({ task: t, onOpen, hideOnPhone, selected }) {

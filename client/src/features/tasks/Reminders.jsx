@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
-import { code, dayDiff, today } from './lib';
+import { api } from '@/lib/api';
+import { code, dayDiff, today } from '@/lib/format';
 
 // Shown once per login: your most urgent open task that is late or due within 3 days.
 const when = (days) => (days > 0 ? `${days} ${days === 1 ? 'day' : 'days'} late` : days === 0 ? 'due today' : days === -1 ? 'due tomorrow' : `due in ${-days} days`);

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
-import Avatar from './Avatar';
-import { StatusIcon, X } from './icons';
-import { STATUSES, code, daysLate, shortName } from './lib';
+import { api } from '@/lib/api';
+import Avatar from '@/components/Avatar';
+import { StatusIcon, X } from '@/components/icons';
+import { STATUSES, code, daysLate, shortName } from '@/lib/format';
 
 const Field = ({ id, label, children }) => (
   <div>

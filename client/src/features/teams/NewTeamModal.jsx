@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { api } from './api';
-import Modal, { bodyClass, footClass } from './Modal';
+import { api } from '@/lib/api';
+import Modal, { bodyClass, footClass } from '@/components/Modal';
 
 export default function NewTeamModal({ onClose, onCreated }) {
   const [error, setError] = useState('');

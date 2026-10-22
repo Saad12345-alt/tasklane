@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
-import Sidebar, { TeamsDrawer } from './Sidebar';
-import NewTeamModal from './NewTeamModal';
-import MembersModal from './MembersModal';
-import TaskList from './TaskList';
-import TaskDrawer from './TaskDrawer';
-import Reminders from './Reminders';
-import { Chevron, Plus } from './icons';
+import { api } from '@/lib/api';
+import Sidebar, { TeamsDrawer } from '@/features/teams/Sidebar';
+import NewTeamModal from '@/features/teams/NewTeamModal';
+import MembersModal from '@/features/teams/MembersModal';
+import TaskList from '@/features/tasks/TaskList';
+import TaskDrawer from '@/features/tasks/TaskDrawer';
+import Reminders from '@/features/tasks/Reminders';
+import { Chevron, Plus } from '@/components/icons';
 
 export default function Dashboard({ user, onSignOut }) {
   const [teams, setTeams] = useState(null); // null = loading
